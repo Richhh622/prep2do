@@ -3,235 +3,485 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🇰🇷 韓國購物清單</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <title>✅ My Lists</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #fff9f5; font-family: system-ui, -apple-system, sans-serif; }
-    input:focus { outline: 2px solid #ff9a9e; }
-    ::-webkit-scrollbar { height: 4px; }
-    ::-webkit-scrollbar-thumb { background: #f0b8b8; border-radius: 4px; }
+    body { background: #f7f8fc; font-family: system-ui, -apple-system, sans-serif; }
+    input, textarea { font-family: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 4px; }
+
+    /* Login */
+    .login-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg,#667eea,#764ba2); padding: 24px; }
+    .login-card { background: #fff; border-radius: 24px; padding: 40px 32px; text-align: center; max-width: 360px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .login-icon { font-size: 52px; margin-bottom: 12px; }
+    .login-title { font-size: 26px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+    .login-sub { color: #888; font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #e8e8e8; background: #fff; font-size: 15px; font-weight: 600; color: #333; transition: all 0.2s; }
+    .google-btn:hover { background: #f5f5f5; border-color: #ddd; }
+    .google-btn svg { width: 20px; height: 20px; }
+
+    /* App shell */
+    .app { min-height: 100vh; background: #f7f8fc; }
+    .header { background: linear-gradient(135deg,#667eea,#764ba2); padding: 16px; color: #fff; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 540px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .header-title { font-size: 18px; font-weight: 800; letter-spacing: 0.3px; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); object-fit: cover; cursor: pointer; }
+    .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
+
+    /* Greeting */
+    .greeting { max-width: 540px; margin: 20px auto 0; padding: 0 16px; }
+    .greeting h2 { font-size: 22px; font-weight: 800; color: #1a1a2e; }
+    .greeting p { color: #888; font-size: 14px; margin-top: 2px; }
+
+    /* Lists grid */
+    .lists-wrap { max-width: 540px; margin: 0 auto; padding: 16px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 10px; }
+    .lists-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .list-card { background: #fff; border-radius: 18px; padding: 18px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; position: relative; border: 2px solid transparent; }
+    .list-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .list-card.shared { border-color: #667eea22; }
+    .list-emoji { font-size: 30px; margin-bottom: 8px; }
+    .list-name { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; word-break: break-word; }
+    .list-count { font-size: 12px; color: #aaa; }
+    .list-shared-badge { position: absolute; top: 10px; right: 10px; background: #667eea18; color: #667eea; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+    .new-list-card { background: none; border: 2px dashed #d0d5e8; border-radius: 18px; padding: 18px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; cursor: pointer; transition: all 0.15s; color: #aaa; }
+    .new-list-card:hover { border-color: #667eea; color: #667eea; background: #667eea08; }
+    .new-list-icon { font-size: 26px; margin-bottom: 6px; }
+    .new-list-label { font-size: 13px; font-weight: 600; }
+
+    /* List detail */
+    .detail-header { background: linear-gradient(135deg,#667eea,#764ba2); padding: 16px; color: #fff; }
+    .detail-header-inner { max-width: 540px; margin: 0 auto; }
+    .back-btn { background: none; border: none; color: #fff; font-size: 15px; font-weight: 600; padding: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; opacity: 0.9; }
+    .detail-emoji { font-size: 36px; margin-bottom: 4px; }
+    .detail-title { font-size: 22px; font-weight: 800; }
+    .detail-meta { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+    .detail-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .detail-action-btn { padding: 7px 14px; border-radius: 20px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 12px; font-weight: 600; }
+
+    /* Items */
+    .items-wrap { max-width: 540px; margin: 0 auto; padding: 12px 16px 100px; }
+    .add-item-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+    .add-item-input { flex: 1; padding: 12px 16px; border-radius: 14px; border: 2px solid #e8e8e8; font-size: 15px; background: #fff; transition: border-color 0.2s; }
+    .add-item-input:focus { outline: none; border-color: #667eea; }
+    .add-item-btn { padding: 12px 18px; border-radius: 14px; border: none; background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; font-size: 20px; font-weight: 700; }
+
+    .item-row { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: #fff; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+    .item-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d0d0d0; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.15s; }
+    .item-check.done { background: #667eea; border-color: #667eea; }
+    .item-text { flex: 1; font-size: 15px; color: #1a1a2e; word-break: break-word; }
+    .item-text.done { text-decoration: line-through; color: #bbb; }
+    .item-del { background: none; border: none; color: #ddd; font-size: 18px; padding: 4px; }
+    .item-del:hover { color: #ff6b6b; }
+
+    .empty-state { text-align: center; padding: 48px 16px; color: #bbb; }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 15px; }
+
+    /* Modal */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: flex-end; justify-content: center; z-index: 999; }
+    .modal { background: #fff; border-radius: 24px 24px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 540px; }
+    .modal-title { font-size: 17px; font-weight: 800; color: #1a1a2e; margin-bottom: 18px; }
+    .modal label { font-size: 12px; font-weight: 700; color: #aaa; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .modal input, .modal textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #e8e8e8; font-size: 15px; margin-bottom: 14px; }
+    .modal input:focus, .modal textarea:focus { outline: none; border-color: #667eea; }
+    .emoji-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .emoji-opt { width: 42px; height: 42px; border-radius: 10px; border: 2px solid #e8e8e8; background: #fafafa; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .emoji-opt.sel { border-color: #667eea; background: #667eea12; }
+    .color-grid { display: flex; gap: 8px; margin-bottom: 16px; }
+    .color-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+    .color-opt.sel { border-color: #333; }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-save { flex: 1; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; font-size: 15px; font-weight: 700; }
+    .modal-cancel { flex: 1; padding: 14px; border-radius: 14px; border: 2px solid #e8e8e8; background: #fff; color: #aaa; font-size: 15px; font-weight: 600; }
+
+    /* Share */
+    .share-link-box { background: #f7f8fc; border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #555; word-break: break-all; margin-bottom: 14px; }
+    .copy-btn { width: 100%; padding: 13px; border-radius: 14px; border: none; background: #667eea; color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+
+    /* User menu */
+    .user-menu { position: fixed; top: 60px; right: 16px; background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 8px; z-index: 200; min-width: 180px; }
+    .user-menu-item { padding: 11px 14px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; color: #333; }
+    .user-menu-item:hover { background: #f5f5f5; }
+    .user-menu-item.danger { color: #ff6b6b; }
+
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: #fff; padding: 12px 22px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 9999; animation: fadeup 0.3s ease; }
+    @keyframes fadeup { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script>
-const { useState, useEffect, useRef } = React;
+<div id="root"></div>
 
-const INIT = [
-  { id: 1, name: "大創", emoji: "🛍️", categories: [
-    { id: 11, name: "化妝品類💄", items: [{ id: 111, name: "示範商品", image: "", priceKRW: 3000, note: "Basic 範例" }] },
-    { id: 12, name: "其他", items: [] },
-  ]},
-  { id: 2, name: "Olive Young", emoji: "🫒", categories: [
-    { id: 21, name: "化妝品類💄", items: [] },
-    { id: 22, name: "保養品類", items: [] },
-    { id: 23, name: "其他", items: [] },
-  ]},
-  { id: 3, name: "韓國藥局", emoji: "💊", categories: [
-    { id: 31, name: "保養品類", items: [] },
-  ]},
-];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, onSnapshot, arrayUnion, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const KEY = "kr_shopping_v1";
-const load = () => { try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
-const save = s => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch {} };
+const firebaseConfig = {
+  apiKey: "AIzaSyCjjVsi8MZoeiTLMN-6Ju8_SSUbh97aaTM",
+  authDomain: "my-lists-app-1acff.firebaseapp.com",
+  projectId: "my-lists-app-1acff",
+  storageBucket: "my-lists-app-1acff.firebasestorage.app",
+  messagingSenderId: "36330666849",
+  appId: "1:36330666849:web:5cc74e9d21c196dd592320"
+};
 
-const fmt = n => n ? `₩${Number(n).toLocaleString()}` : "—";
-const twd = (k, r) => k && r ? `≈ NT$${Math.round(k * r).toLocaleString()}` : "";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const L = { fontSize: 12, color: "#999", fontWeight: 600, display: "block", marginBottom: 4 };
-const INP = { width: "100%", padding: "10px 12px", borderRadius: 10, border: "1.5px solid #f0d8d8", fontSize: 14, marginBottom: 12, boxSizing: "border-box", fontFamily: "inherit" };
-const SBTN = { flex: 1, padding: 12, borderRadius: 12, border: "none", background: "linear-gradient(135deg,#ff6b6b,#ff9a9e)", color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer" };
-const CBTN = { flex: 1, padding: 12, borderRadius: 12, border: "1.5px solid #eee", background: "#fff", color: "#aaa", fontWeight: 600, fontSize: 15, cursor: "pointer" };
+// ── State ──
+let user = null;
+let lists = [];
+let currentList = null;
+let items = [];
+let unsubLists = null;
+let unsubItems = null;
+let modal = null; // 'new-list' | 'share' | 'user-menu'
+let newListForm = { name: "", emoji: "✅", color: "#667eea" };
+let addItemText = "";
+let toast = null;
+let toastTimer = null;
+let sharedListId = null; // from URL
 
-const e = React.createElement;
+const EMOJIS = ["✅","🛒","🇰🇷","🇯🇵","🇹🇼","🛍️","🏕️","🎄","🎓","🏠","🐶","🍰","💄","💊","🌏","🏖️","🎁","📦","🍜","☕","🚗","✈️","🏋️","📚"];
+const COLORS = ["#667eea","#f093fb","#f5576c","#43e97b","#fa8231","#4fc3f7","#a29bfe","#fd79a8","#00b894","#fdcb6e"];
 
-function App() {
-  const [stores, setStores] = useState(() => load() || INIT);
-  const [activeId, setActiveId] = useState(() => (load() || INIT)[0]?.id || 1);
-  const [rate, setRate] = useState(0.023);
-  const [rateStr, setRateStr] = useState("匯率載入中…");
-  const [modal, setModal] = useState(null);
-  const [form, setForm] = useState({});
-  const nid = useRef(9000);
-  const uid = () => ++nid.current;
-  const fileRef = useRef();
+function render() {
+  const root = document.getElementById("root");
+  if (!user) { root.innerHTML = renderLogin(); attachLogin(); return; }
+  if (currentList) { root.innerHTML = renderDetail(); attachDetail(); return; }
+  root.innerHTML = renderHome();
+  attachHome();
+}
 
-  useEffect(() => { save(stores); }, [stores]);
-
-  useEffect(() => {
-    fetch("https://open.er-api.com/v6/latest/KRW")
-      .then(r => r.json())
-      .then(d => {
-        const r = d.rates && d.rates.TWD;
-        if (r) { setRate(r); setRateStr(`1 KRW ≈ ${r.toFixed(4)} TWD（即時）`); }
-        else setRateStr("1 KRW ≈ 0.0230 TWD（預設）");
-      })
-      .catch(() => setRateStr("1 KRW ≈ 0.0230 TWD（預設）"));
-  }, []);
-
-  const store = stores.find(s => s.id === activeId) || stores[0];
-  const mut = fn => setStores(prev => { const d = JSON.parse(JSON.stringify(prev)); fn(d); return d; });
-  const open = (type, extra) => { extra = extra || {}; setModal({ type, ...extra }); setForm(extra.item ? { ...extra.item } : (extra.defaults || {})); };
-  const close = () => { setModal(null); setForm({}); };
-  const fset = k => ev => setForm(f => ({ ...f, [k]: ev.target.value }));
-
-  const handleImg = ev => {
-    const file = ev.target.files && ev.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = x => setForm(f => ({ ...f, image: x.target.result }));
-    reader.readAsDataURL(file);
-    ev.target.value = "";
+// ── LOGIN ──
+function renderLogin() {
+  return `<div class="login-wrap">
+    <div class="login-card">
+      <div class="login-icon">📋</div>
+      <div class="login-title">My Lists</div>
+      <div class="login-sub">旅行、採買、任何事<br>一個地方管理所有清單</div>
+      <button class="google-btn" id="google-login">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        使用 Google 登入
+      </button>
+    </div>
+  </div>`;
+}
+function attachLogin() {
+  document.getElementById("google-login").onclick = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch(e) { showToast("登入失敗，請再試一次"); }
   };
+}
 
-  const total = stores.reduce((a, s) => a + s.categories.reduce((b, c) => b + c.items.reduce((x, i) => x + (Number(i.priceKRW) || 0), 0), 0), 0);
+// ── HOME ──
+function renderHome() {
+  const name = (user.displayName || "").split(" ")[0];
+  const myLists = lists.filter(l => l.ownerId === user.uid);
+  const sharedLists = lists.filter(l => l.ownerId !== user.uid);
 
-  const saveItem = () => {
-    mut(d => {
-      const st = d.find(s => s.id === modal.storeId);
-      const ct = st.categories.find(c => c.id === modal.catId);
-      const item = { ...form, priceKRW: Number(form.priceKRW) || 0 };
-      if (modal.item) { const i = ct.items.findIndex(x => x.id === modal.item.id); ct.items[i] = { ...item, id: modal.item.id }; }
-      else ct.items.push({ ...item, id: uid() });
+  return `
+  <div class="app">
+    ${renderHeader(name)}
+    <div class="greeting">
+      <h2>Hi, ${name} 👋</h2>
+      <p>你有 ${myLists.length} 份清單</p>
+    </div>
+    <div class="lists-wrap">
+      <div class="section-title">我的清單</div>
+      <div class="lists-grid">
+        ${myLists.map(l => renderListCard(l)).join("")}
+        <div class="new-list-card" id="new-list-btn">
+          <div class="new-list-icon">＋</div>
+          <div class="new-list-label">新增清單</div>
+        </div>
+      </div>
+      ${sharedLists.length > 0 ? `
+        <div class="section-title">共享給我的</div>
+        <div class="lists-grid">
+          ${sharedLists.map(l => renderListCard(l, true)).join("")}
+        </div>
+      ` : ""}
+    </div>
+  </div>
+  ${modal === "new-list" ? renderNewListModal() : ""}
+  ${modal === "user-menu" ? renderUserMenu() : ""}
+  ${toast ? `<div class="toast">${toast}</div>` : ""}`;
+}
+
+function renderHeader(name) {
+  const img = user.photoURL ? `<img class="avatar" src="${user.photoURL}" id="avatar-btn">` : `<div class="avatar-placeholder" id="avatar-btn">👤</div>`;
+  return `<div class="header"><div class="header-inner"><div class="header-title">📋 My Lists</div>${img}</div></div>`;
+}
+
+function renderListCard(l, shared) {
+  const done = (l.items||[]).filter(i=>i.done).length;
+  const total = (l.items||[]).length;
+  return `<div class="list-card ${shared?'shared':''}" data-id="${l.id}">
+    ${shared ? '<div class="list-shared-badge">共享</div>' : ''}
+    <div class="list-emoji">${l.emoji||"📋"}</div>
+    <div class="list-name">${l.name}</div>
+    <div class="list-count">${total} 項目${total>0?` · ${done} 完成`:''}</div>
+  </div>`;
+}
+
+function renderNewListModal() {
+  return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">✨ 新增清單</div>
+      <label>清單名稱</label>
+      <input id="list-name-input" placeholder="e.g. 🇰🇷 韓國旅行" value="${newListForm.name}" />
+      <label>選擇 Emoji</label>
+      <div class="emoji-grid">
+        ${EMOJIS.map(em => `<div class="emoji-opt ${newListForm.emoji===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}
+      </div>
+      <div class="modal-btns">
+        <button class="modal-cancel" id="modal-cancel">取消</button>
+        <button class="modal-save" id="modal-save">建立</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderUserMenu() {
+  return `<div class="user-menu" id="user-menu">
+    <div class="user-menu-item">${user.email}</div>
+    <div class="user-menu-item danger" id="logout-btn">登出</div>
+  </div>`;
+}
+
+function attachHome() {
+  document.querySelectorAll(".list-card").forEach(el => {
+    el.onclick = () => openList(el.dataset.id);
+  });
+  const nb = document.getElementById("new-list-btn");
+  if (nb) nb.onclick = () => { modal = "new-list"; newListForm = { name:"", emoji:"✅" }; render(); };
+
+  const av = document.getElementById("avatar-btn");
+  if (av) av.onclick = (e) => { e.stopPropagation(); modal = modal === "user-menu" ? null : "user-menu"; render(); };
+
+  if (modal === "new-list") {
+    document.getElementById("modal-bg").onclick = e => { if(e.target.id==="modal-bg"){ modal=null; render(); } };
+    document.getElementById("modal-cancel").onclick = () => { modal=null; render(); };
+    document.getElementById("list-name-input").oninput = e => { newListForm.name = e.target.value; };
+    document.querySelectorAll(".emoji-opt").forEach(el => {
+      el.onclick = () => { newListForm.emoji = el.dataset.emoji; render(); setTimeout(()=>{ const inp=document.getElementById("list-name-input"); if(inp){inp.focus();inp.value=newListForm.name;} },0); };
     });
-    close();
+    document.getElementById("modal-save").onclick = createList;
+    setTimeout(() => document.getElementById("list-name-input")?.focus(), 50);
+  }
+  if (modal === "user-menu") {
+    document.onclick = (e) => { if(!document.getElementById("user-menu")?.contains(e.target)){ modal=null; render(); document.onclick=null; } };
+    document.getElementById("logout-btn").onclick = () => { signOut(auth); modal=null; };
+  }
+}
+
+// ── DETAIL ──
+function renderDetail() {
+  const isOwner = currentList.ownerId === user.uid;
+  const doneCount = items.filter(i=>i.done).length;
+  return `
+  <div class="app">
+    <div class="detail-header">
+      <div class="detail-header-inner">
+        <button class="back-btn" id="back-btn">← 返回</button>
+        <div class="detail-emoji">${currentList.emoji||"📋"}</div>
+        <div class="detail-title">${currentList.name}</div>
+        <div class="detail-meta">${items.length} 項目 · ${doneCount} 完成</div>
+        <div class="detail-actions">
+          ${isOwner ? `<button class="detail-action-btn" id="share-btn">🔗 分享</button>` : ""}
+          ${isOwner ? `<button class="detail-action-btn" id="delete-list-btn">🗑 刪除清單</button>` : ""}
+        </div>
+      </div>
+    </div>
+    <div class="items-wrap">
+      <div class="add-item-bar">
+        <input class="add-item-input" id="add-item-input" placeholder="新增項目..." value="${addItemText}" />
+        <button class="add-item-btn" id="add-item-btn">＋</button>
+      </div>
+      ${items.length === 0 ? `<div class="empty-state"><div class="empty-icon">${currentList.emoji||"📋"}</div><div class="empty-text">還沒有項目，新增第一個吧！</div></div>` : ""}
+      ${items.map(item => `
+        <div class="item-row" data-id="${item.id}">
+          <div class="item-check ${item.done?'done':''}" data-check="${item.id}">
+            ${item.done ? '<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : ''}
+          </div>
+          <div class="item-text ${item.done?'done':''}">${item.text}</div>
+          <button class="item-del" data-del="${item.id}">×</button>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+  ${modal === "share" ? renderShareModal() : ""}
+  ${toast ? `<div class="toast">${toast}</div>` : ""}`;
+}
+
+function renderShareModal() {
+  const url = `${location.origin}${location.pathname}?join=${currentList.id}`;
+  return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">🔗 分享清單</div>
+      <p style="color:#888;font-size:14px;margin-bottom:14px;">把連結傳給朋友，對方登入後就能一起編輯這份清單。</p>
+      <div class="share-link-box">${url}</div>
+      <button class="copy-btn" id="copy-link-btn">複製連結</button>
+      <button class="modal-cancel" id="modal-cancel" style="width:100%">關閉</button>
+    </div>
+  </div>`;
+}
+
+function attachDetail() {
+  document.getElementById("back-btn").onclick = () => {
+    currentList = null; items = [];
+    if (unsubItems) { unsubItems(); unsubItems = null; }
+    modal = null; render();
   };
 
-  // ── render helpers ──
-  const Img = ({ src }) => e("div", { style: { width: 54, height: 54, borderRadius: 10, background: "#f5eaea", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 } },
-    src ? e("img", { src, alt: "", style: { width: "100%", height: "100%", objectFit: "cover" } }) : "🛒"
-  );
+  const inp = document.getElementById("add-item-input");
+  inp.oninput = e => { addItemText = e.target.value; };
+  inp.onkeydown = e => { if(e.key==="Enter") addItem(); };
+  document.getElementById("add-item-btn").onclick = addItem;
 
-  return e("div", { style: { minHeight: "100vh", background: "#fff9f5" } },
+  document.querySelectorAll("[data-check]").forEach(el => {
+    el.onclick = () => toggleItem(el.dataset.check);
+  });
+  document.querySelectorAll("[data-del]").forEach(el => {
+    el.onclick = () => deleteItem(el.dataset.del);
+  });
 
-    // Header
-    e("div", { style: { background: "linear-gradient(135deg,#ff6b6b,#ff9a9e)", padding: "18px 16px 14px", color: "#fff" } },
-      e("div", { style: { maxWidth: 480, margin: "0 auto" } },
-        e("div", { style: { fontSize: 20, fontWeight: 800 } }, "🇰🇷 韓國購物清單"),
-        e("div", { style: { fontSize: 11, opacity: 0.85, marginTop: 2 } }, rateStr),
-        e("div", { style: { marginTop: 10, background: "rgba(255,255,255,0.22)", borderRadius: 10, padding: "8px 14px", display: "inline-block" } },
-          e("div", { style: { fontSize: 11, opacity: 0.9 } }, "預估總花費"),
-          e("div", { style: { fontSize: 17, fontWeight: 700 } }, fmt(total) + " ", e("span", { style: { fontSize: 13, fontWeight: 400 } }, twd(total, rate)))
-        )
-      )
-    ),
+  const sb = document.getElementById("share-btn");
+  if (sb) sb.onclick = () => { modal = "share"; render(); };
 
-    e("div", { style: { maxWidth: 480, margin: "0 auto", padding: "0 16px 40px" } },
+  const db2 = document.getElementById("delete-list-btn");
+  if (db2) db2.onclick = deleteList;
 
-      // Store tabs
-      e("div", { style: { display: "flex", gap: 8, overflowX: "auto", padding: "12px 0 4px" } },
-        ...stores.map(s => e("button", { key: s.id, onClick: () => setActiveId(s.id), style: { whiteSpace: "nowrap", padding: "7px 14px", borderRadius: 20, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 13, background: activeId === s.id ? "#ff6b6b" : "#f0e6e6", color: activeId === s.id ? "#fff" : "#a05050" } }, s.emoji + " " + s.name)),
-        e("button", { onClick: () => open("store", { defaults: { name: "", emoji: "🛍️" } }), style: { whiteSpace: "nowrap", padding: "7px 14px", borderRadius: 20, border: "2px dashed #f0b8b8", background: "none", color: "#cc7777", cursor: "pointer", fontWeight: 600, fontSize: 13 } }, "＋ 新店家")
-      ),
+  if (modal === "share") {
+    document.getElementById("modal-bg").onclick = e => { if(e.target.id==="modal-bg"){ modal=null; render(); } };
+    document.getElementById("modal-cancel").onclick = () => { modal=null; render(); };
+    document.getElementById("copy-link-btn").onclick = () => {
+      const url = `${location.origin}${location.pathname}?join=${currentList.id}`;
+      navigator.clipboard.writeText(url).then(() => showToast("✅ 連結已複製！"));
+    };
+  }
+}
 
-      store && e(React.Fragment, null,
-        // Store header
-        e("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", margin: "14px 0 8px" } },
-          e("div", { style: { fontSize: 17, fontWeight: 700, color: "#cc4444" } }, store.emoji + " " + store.name),
-          e("div", { style: { display: "flex", gap: 8 } },
-            e("button", { onClick: () => open("cat", { storeId: store.id, defaults: { name: "" } }), style: { fontSize: 12, padding: "5px 12px", borderRadius: 14, border: "none", background: "#ffe0e0", color: "#cc4444", cursor: "pointer", fontWeight: 600 } }, "＋ 分類"),
-            e("button", { onClick: () => { if (window.confirm("刪除此店家？")) { const rest = stores.filter(s => s.id !== store.id); setStores(rest); setActiveId((rest[0] || {}).id); } }, style: { fontSize: 12, padding: "5px 8px", borderRadius: 14, border: "none", background: "#f5f5f5", color: "#bbb", cursor: "pointer" } }, "🗑")
-          )
-        ),
+// ── FIRESTORE OPS ──
+async function createList() {
+  const name = document.getElementById("list-name-input")?.value?.trim() || newListForm.name.trim();
+  if (!name) { showToast("請輸入清單名稱"); return; }
+  try {
+    await addDoc(collection(db, "lists"), {
+      name, emoji: newListForm.emoji || "✅",
+      ownerId: user.uid,
+      ownerName: user.displayName || "",
+      members: [user.uid],
+      createdAt: serverTimestamp()
+    });
+    modal = null; newListForm = { name:"", emoji:"✅" };
+    showToast("✨ 清單已建立！");
+    render();
+  } catch(e) { showToast("建立失敗，請再試"); }
+}
 
-        // Categories
-        ...store.categories.map(cat =>
-          e("div", { key: cat.id, style: { marginBottom: 12, background: "#fff", borderRadius: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", overflow: "hidden" } },
-            e("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 14px", background: "#fff5f5", borderBottom: "1px solid #ffe8e8" } },
-              e("div", { style: { fontWeight: 700, color: "#cc4444", fontSize: 14 } }, cat.name),
-              e("div", { style: { display: "flex", gap: 6 } },
-                e("button", { onClick: () => open("item", { storeId: store.id, catId: cat.id }), style: { fontSize: 12, padding: "4px 10px", borderRadius: 12, border: "none", background: "#ff6b6b", color: "#fff", cursor: "pointer", fontWeight: 600 } }, "＋ 商品"),
-                e("button", { onClick: () => { if (window.confirm("刪除此分類？")) mut(d => { const st = d.find(s => s.id === store.id); st.categories = st.categories.filter(c => c.id !== cat.id); }); }, style: { fontSize: 12, padding: "4px 8px", borderRadius: 12, border: "none", background: "#f0f0f0", color: "#bbb", cursor: "pointer" } }, "🗑")
-              )
-            ),
-            cat.items.length === 0
-              ? e("div", { style: { padding: 14, color: "#ccc", fontSize: 13, textAlign: "center" } }, "點「＋ 商品」新增")
-              : cat.items.map(item =>
-                e("div", { key: item.id, style: { display: "flex", gap: 10, padding: "10px 14px", borderBottom: "1px solid #fafafa", alignItems: "flex-start" } },
-                  e(Img, { src: item.image }),
-                  e("div", { style: { flex: 1 } },
-                    e("div", { style: { fontWeight: 600, fontSize: 14 } }, item.name),
-                    e("div", { style: { fontSize: 13, color: "#ff6b6b", fontWeight: 700 } }, fmt(item.priceKRW)),
-                    e("div", { style: { fontSize: 12, color: "#aaa" } }, twd(item.priceKRW, rate)),
-                    item.note && e("div", { style: { fontSize: 11, color: "#bbb", marginTop: 1 } }, "📝 " + item.note)
-                  ),
-                  e("div", { style: { display: "flex", gap: 4 } },
-                    e("button", { onClick: () => open("item", { storeId: store.id, catId: cat.id, item }), style: { padding: "5px 8px", borderRadius: 10, border: "none", background: "#fff0f0", cursor: "pointer" } }, "✏️"),
-                    e("button", { onClick: () => mut(d => { const st = d.find(s => s.id === store.id); const ct = st.categories.find(c => c.id === cat.id); ct.items = ct.items.filter(i => i.id !== item.id); }), style: { padding: "5px 8px", borderRadius: 10, border: "none", background: "#f5f5f5", color: "#bbb", cursor: "pointer" } }, "🗑")
-                  )
-                )
-              )
-          )
-        )
-      )
-    ),
-
-    // Hidden file input
-    e("input", { ref: fileRef, type: "file", accept: "image/*", style: { display: "none" }, onChange: handleImg }),
-
-    // Modal backdrop
-    modal && e("div", { onClick: ev => ev.target === ev.currentTarget && close(), style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 999 } },
-      e("div", { style: { background: "#fff", borderRadius: "20px 20px 0 0", padding: "24px 20px 36px", width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto" } },
-
-        // Item modal
-        modal.type === "item" && e(React.Fragment, null,
-          e("div", { style: { fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#cc4444" } }, modal.item ? "✏️ 編輯商品" : "＋ 新增商品"),
-          e("label", { style: L }, "商品名稱"),
-          e("input", { style: INP, value: form.name || "", onChange: fset("name"), placeholder: "e.g. 防曬乳 SPF50" }),
-          e("label", { style: L }, "商品圖片"),
-          e("div", { style: { display: "flex", gap: 12, alignItems: "center", marginBottom: 14 } },
-            e("div", { onClick: () => fileRef.current && fileRef.current.click(), style: { width: 72, height: 72, borderRadius: 12, border: "2px dashed #f0b8b8", background: "#fff5f5", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", overflow: "hidden", flexShrink: 0 } },
-              form.image ? e("img", { src: form.image, alt: "", style: { width: "100%", height: "100%", objectFit: "cover" } }) : e("span", { style: { fontSize: 28 } }, "📷")
-            ),
-            e("div", null,
-              e("button", { onClick: () => fileRef.current && fileRef.current.click(), style: { padding: "8px 16px", borderRadius: 12, border: "none", background: "#ffe0e0", color: "#cc4444", fontWeight: 600, fontSize: 13, cursor: "pointer", display: "block", marginBottom: 6 } }, "從相簿選擇"),
-              form.image && e("button", { onClick: () => setForm(f => ({ ...f, image: "" })), style: { padding: "6px 12px", borderRadius: 12, border: "none", background: "#f5f5f5", color: "#aaa", fontSize: 12, cursor: "pointer" } }, "移除圖片")
-            )
-          ),
-          e("label", { style: L }, "價格（韓元 ₩）"),
-          e("input", { style: INP, type: "number", value: form.priceKRW || "", onChange: fset("priceKRW"), placeholder: "e.g. 15000" }),
-          Number(form.priceKRW) > 0 && e("div", { style: { fontSize: 12, color: "#ff6b6b", marginBottom: 10, marginTop: -8 } }, twd(form.priceKRW, rate)),
-          e("label", { style: L }, "備註"),
-          e("input", { style: INP, value: form.note || "", onChange: fset("note"), placeholder: "e.g. 買兩個、限定色" }),
-          e("div", { style: { display: "flex", gap: 10, marginTop: 4 } },
-            e("button", { onClick: close, style: CBTN }, "取消"),
-            e("button", { onClick: saveItem, style: SBTN }, "儲存")
-          )
-        ),
-
-        // Category modal
-        modal.type === "cat" && e(React.Fragment, null,
-          e("div", { style: { fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#cc4444" } }, "＋ 新增分類"),
-          e("label", { style: L }, "分類名稱"),
-          e("input", { style: INP, value: form.name || "", onChange: fset("name"), placeholder: "e.g. 保養品類🧴" }),
-          e("div", { style: { display: "flex", gap: 10, marginTop: 4 } },
-            e("button", { onClick: close, style: CBTN }, "取消"),
-            e("button", { onClick: () => { mut(d => { d.find(s => s.id === modal.storeId).categories.push({ id: uid(), name: form.name, items: [] }); }); close(); }, style: SBTN }, "新增")
-          )
-        ),
-
-        // Store modal
-        modal.type === "store" && e(React.Fragment, null,
-          e("div", { style: { fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#cc4444" } }, "＋ 新增店家"),
-          e("label", { style: L }, "店名"),
-          e("input", { style: INP, value: form.name || "", onChange: fset("name"), placeholder: "e.g. 無印良品" }),
-          e("label", { style: L }, "Emoji"),
-          e("input", { style: INP, value: form.emoji || "", onChange: fset("emoji"), placeholder: "e.g. 🛒" }),
-          e("div", { style: { display: "flex", gap: 10, marginTop: 4 } },
-            e("button", { onClick: close, style: CBTN }, "取消"),
-            e("button", { onClick: () => { const id = uid(); setStores(p => [...p, { id, name: form.name, emoji: form.emoji || "🛒", categories: [] }]); setActiveId(id); close(); }, style: SBTN }, "新增")
-          )
-        )
-      )
-    )
+async function openList(id) {
+  const snap = await getDoc(doc(db, "lists", id));
+  if (!snap.exists()) { showToast("找不到這份清單"); return; }
+  currentList = { id: snap.id, ...snap.data() };
+  items = [];
+  modal = null;
+  render();
+  // subscribe items
+  if (unsubItems) unsubItems();
+  unsubItems = onSnapshot(
+    query(collection(db, "lists", id, "items")),
+    snap => {
+      items = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+      render();
+    }
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(React.createElement(App));
-  </script>
+async function addItem() {
+  const text = (document.getElementById("add-item-input")?.value || addItemText).trim();
+  if (!text) return;
+  addItemText = "";
+  try {
+    await addDoc(collection(db, "lists", currentList.id, "items"), {
+      text, done: false, createdAt: serverTimestamp(), addedBy: user.uid
+    });
+  } catch(e) { showToast("新增失敗"); }
+}
+
+async function toggleItem(itemId) {
+  const item = items.find(i => i.id === itemId);
+  if (!item) return;
+  await updateDoc(doc(db, "lists", currentList.id, "items", itemId), { done: !item.done });
+}
+
+async function deleteItem(itemId) {
+  await deleteDoc(doc(db, "lists", currentList.id, "items", itemId));
+}
+
+async function deleteList() {
+  if (!confirm(`刪除「${currentList.name}」？此動作無法復原。`)) return;
+  // delete all items
+  const itemsSnap = await getDocs(collection(db, "lists", currentList.id, "items"));
+  await Promise.all(itemsSnap.docs.map(d => deleteDoc(d.ref)));
+  await deleteDoc(doc(db, "lists", currentList.id));
+  currentList = null; items = [];
+  if (unsubItems) { unsubItems(); unsubItems = null; }
+  showToast("清單已刪除");
+  render();
+}
+
+// ── JOIN via share link ──
+async function handleJoinLink(listId) {
+  try {
+    const ref = doc(db, "lists", listId);
+    await updateDoc(ref, { members: arrayUnion(user.uid) });
+    showToast("✅ 已加入共享清單！");
+    history.replaceState({}, "", location.pathname);
+    openList(listId);
+  } catch(e) { showToast("無法加入，連結可能已失效"); }
+}
+
+// ── Subscribe user's lists ──
+function subscribeLists() {
+  if (unsubLists) unsubLists();
+  unsubLists = onSnapshot(
+    query(collection(db, "lists"), where("members", "array-contains", user.uid)),
+    snap => {
+      lists = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+    }
+  );
+}
+
+function showToast(msg) {
+  toast = msg;
+  if (toastTimer) clearTimeout(toastTimer);
+  render();
+  toastTimer = setTimeout(() => { toast = null; render(); }, 2500);
+}
+
+// ── Auth listener ──
+onAuthStateChanged(auth, async u => {
+  user = u;
+  if (u) {
+    subscribeLists();
+    const joinId = new URLSearchParams(location.search).get("join");
+    if (joinId) { sharedListId = joinId; await handleJoinLink(joinId); }
+  } else {
+    if (unsubLists) { unsubLists(); unsubLists = null; }
+    if (unsubItems) { unsubItems(); unsubItems = null; }
+    lists = []; currentList = null; items = [];
+  }
+  render();
+});
+</script>
 </body>
 </html>
