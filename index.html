@@ -216,25 +216,34 @@ const T={
 };
 const t=()=>T[lang];
 
-const THEMES={
-  "紅/Red":["#FBDCE7","#7E0910"],
-  "橙/Orange":["#FAD192","#F08C00"],
-  "黃/Yellow":["#FFEB7D","#FBCE25"],
-  "綠/Green":["#C2DCCA","#51662A","#2F7F4C"],
-  "藍/Blue":["#B4DDDA","#C9E7EE","#ADDCED","#0083CD"],
-  "靛/Indigo":["#4A8FCC","#02307E"],
-  "紫/Purple":["#D4C4DB","#AC91C4"],
-  "棕/Brown":["#F5F1EA","#7D5A44"],
-  "灰/Gray":["#D3D3D4","#808080"],
-  "白/White":["#FFFFFF"],
-};
+const THEMES=["#FBDCE7","#7E0910","#FAD192","#F08C00","#FFEB7D","#FBCE25","#C2DCCA","#51662A","#2F7F4C","#B4DDDA","#C9E7EE","#ADDCED","#0083CD","#4A8FCC","#02307E","#D4C4DB","#AC91C4","#F5F1EA","#7D5A44","#D3D3D4","#808080","#FFFFFF"];
 
 const EMOJIS=["🛒","🇰🇷","🇯🇵","🇹🇼","🇺🇸","🛍️","💄","💊","🏕️","🎄","🎓","🏠","🐶","🍰","☕","✈️","🏖️","🎁","📦","🏋️","📚","🌏","🎀","🧴"];
 const CVALS=["KRW","JPY","USD","EUR","CNY"];
 const CSYM={KRW:"₩",JPY:"¥",USD:"$",EUR:"€",CNY:"¥"};
 
 const userTheme=()=>localStorage.getItem("theme")||"#F2EDE9";
-const setTheme=c=>{localStorage.setItem("theme",c);document.body.style.background=c;};
+
+// 判斷顏色深淺，深色背景用白字
+function isDark(hex){
+  const h=hex.replace("#","");
+  const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+  return (r*0.299+g*0.587+b*0.114)<128;
+}
+function applyTheme(c){
+  document.body.style.background=c;
+  const dark=isDark(c);
+  const textColor=dark?"#fff":"#1a1a2e";
+  const subColor=dark?"rgba(255,255,255,0.6)":"#888";
+  const borderColor=dark?"rgba(255,255,255,0.2)":"rgba(0,0,0,0.06)";
+  document.documentElement.style.setProperty("--text",textColor);
+  document.documentElement.style.setProperty("--sub",subColor);
+  document.documentElement.style.setProperty("--border",borderColor);
+  document.documentElement.style.setProperty("--card-bg",dark?"rgba(255,255,255,0.12)":"#fff");
+  document.documentElement.style.setProperty("--btn-bg",dark?"rgba(255,255,255,0.15)":"rgba(0,0,0,0.07)");
+  document.documentElement.style.setProperty("--btn-color",dark?"#fff":"#555");
+}
+const setTheme=c=>{localStorage.setItem("theme",c);applyTheme(c);};
 const toggleLang=()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("lang",lang);render();};
 
 async function uploadToCloudinary(file){
@@ -260,7 +269,7 @@ function toTWD(amount,currency){
 }
 
 function render(){
-  document.body.style.background=userTheme();
+  applyTheme(userTheme());
   const root=document.getElementById("root");
   if(!user){root.innerHTML=renderLogin();bindLogin();return;}
   if(!currentList){root.innerHTML=renderHome();bindHome();return;}
@@ -326,13 +335,14 @@ function renderUserMenu(){
   </div>`;
 }
 function renderThemeModal(){
+  const rows=[];
+  for(let i=0;i<THEMES.length;i+=11) rows.push(THEMES.slice(i,i+11));
   return `<div class="modal-bg" id="theme-modal-bg"><div class="modal">
     <div class="modal-title">${t().theme}</div>
-    ${Object.entries(THEMES).map(([label,colors])=>`
-      <div class="theme-section-label">${label}</div>
-      <div class="theme-row">${colors.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c};${c==="#FFFFFF"?'border:2px solid #ddd;':''}" data-color="${c}" title="${c}"></div>`).join("")}</div>
-    `).join("")}
-    <div class="modal-btns" style="margin-top:16px"><button class="modal-cancel" id="theme-close">${t().close}</button></div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      ${rows.map(row=>`<div style="display:flex;gap:8px;flex-wrap:wrap;">${row.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c};${c==="#FFFFFF"?'border:2px solid #ddd;':''}" data-color="${c}"></div>`).join('')}</div>`).join('')}
+    </div>
+    <div class="modal-btns"><button class="modal-cancel" id="theme-close">${t().close}</button></div>
   </div></div>`;
 }
 function bindHome(){
