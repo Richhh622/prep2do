@@ -1,485 +1,653 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>✅ My Lists</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #f7f8fc; font-family: system-ui, -apple-system, sans-serif; }
-    input, textarea { font-family: inherit; }
-    button { cursor: pointer; font-family: inherit; }
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 4px; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Lists ✨</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg,#F2EDE9);min-height:100vh;transition:background 0.3s;}
+button{cursor:pointer;font-family:inherit;}
+input,textarea,select{font-family:inherit;}
 
-    /* Login */
-    .login-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg,#667eea,#764ba2); padding: 24px; }
-    .login-card { background: #fff; border-radius: 24px; padding: 40px 32px; text-align: center; max-width: 360px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
-    .login-icon { font-size: 52px; margin-bottom: 12px; }
-    .login-title { font-size: 26px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
-    .login-sub { color: #888; font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
-    .google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #e8e8e8; background: #fff; font-size: 15px; font-weight: 600; color: #333; transition: all 0.2s; }
-    .google-btn:hover { background: #f5f5f5; border-color: #ddd; }
-    .google-btn svg { width: 20px; height: 20px; }
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-card{background:#fff;border-radius:28px;padding:44px 32px;text-align:center;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.10);}
+.login-logo{font-size:56px;margin-bottom:14px;}
+.login-title{font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:6px;}
+.login-sub{color:#999;font-size:14px;margin-bottom:32px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;border-radius:16px;border:2px solid #e8e8e8;background:#fff;font-size:15px;font-weight:700;color:#333;transition:all 0.2s;}
+.google-btn:hover{background:#f5f5f5;}
+.google-btn svg{width:20px;height:20px;flex-shrink:0;}
 
-    /* App shell */
-    .app { min-height: 100vh; background: #f7f8fc; }
-    .header { background: linear-gradient(135deg,#667eea,#764ba2); padding: 16px; color: #fff; position: sticky; top: 0; z-index: 100; }
-    .header-inner { max-width: 540px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-    .header-title { font-size: 18px; font-weight: 800; letter-spacing: 0.3px; }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); object-fit: cover; cursor: pointer; }
-    .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
+/* HEADER */
+.header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:inherit;border-bottom:1px solid rgba(0,0,0,0.06);}
+.header-title{font-size:17px;font-weight:800;color:#1a1a2e;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid rgba(0,0,0,0.1);}
+.avatar-ph{width:34px;height:34px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
+.theme-btn{background:none;border:none;font-size:20px;padding:4px;}
 
-    /* Greeting */
-    .greeting { max-width: 540px; margin: 20px auto 0; padding: 0 16px; }
-    .greeting h2 { font-size: 22px; font-weight: 800; color: #1a1a2e; }
-    .greeting p { color: #888; font-size: 14px; margin-top: 2px; }
+/* HOME */
+.home-wrap{max-width:540px;margin:0 auto;padding:16px 16px 80px;}
+.greeting{margin-bottom:20px;}
+.greeting h2{font-size:22px;font-weight:800;color:#1a1a2e;}
+.greeting p{color:#888;font-size:13px;margin-top:3px;}
+.section-label{font-size:12px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin:18px 0 10px;}
+.lists-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.list-card{background:#fff;border-radius:20px;padding:18px 16px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:transform 0.15s,box-shadow 0.15s;position:relative;border:2px solid transparent;}
+.list-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.10);}
+.list-card-emoji{font-size:32px;margin-bottom:8px;}
+.list-card-name{font-size:15px;font-weight:700;color:#1a1a2e;word-break:break-word;}
+.list-card-meta{font-size:12px;color:#bbb;margin-top:4px;}
+.shared-badge{position:absolute;top:10px;right:10px;background:#e8f0ff;color:#5272d4;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.new-card{border:2px dashed #ccc;background:transparent;border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:110px;color:#bbb;transition:all 0.15s;}
+.new-card:hover{border-color:#888;color:#888;background:#fff4;}
+.new-card-icon{font-size:28px;margin-bottom:6px;}
+.new-card-label{font-size:13px;font-weight:600;}
 
-    /* Lists grid */
-    .lists-wrap { max-width: 540px; margin: 0 auto; padding: 16px; }
-    .section-title { font-size: 13px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 10px; }
-    .lists-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .list-card { background: #fff; border-radius: 18px; padding: 18px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; position: relative; border: 2px solid transparent; }
-    .list-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
-    .list-card.shared { border-color: #667eea22; }
-    .list-emoji { font-size: 30px; margin-bottom: 8px; }
-    .list-name { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; word-break: break-word; }
-    .list-count { font-size: 12px; color: #aaa; }
-    .list-shared-badge { position: absolute; top: 10px; right: 10px; background: #667eea18; color: #667eea; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
-    .new-list-card { background: none; border: 2px dashed #d0d5e8; border-radius: 18px; padding: 18px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; cursor: pointer; transition: all 0.15s; color: #aaa; }
-    .new-list-card:hover { border-color: #667eea; color: #667eea; background: #667eea08; }
-    .new-list-icon { font-size: 26px; margin-bottom: 6px; }
-    .new-list-label { font-size: 13px; font-weight: 600; }
+/* DETAIL */
+.detail-wrap{max-width:540px;margin:0 auto;}
+.detail-top{padding:16px 16px 12px;}
+.back-btn{background:none;border:none;font-size:15px;font-weight:600;color:#555;display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:0;}
+.detail-emoji{font-size:38px;margin-bottom:4px;}
+.detail-name{font-size:22px;font-weight:800;color:#1a1a2e;}
+.detail-meta{font-size:12px;color:#aaa;margin-top:3px;}
+.detail-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.detail-action-btn{padding:7px 14px;border-radius:20px;border:none;background:rgba(0,0,0,0.07);color:#555;font-size:12px;font-weight:600;}
 
-    /* List detail */
-    .detail-header { background: linear-gradient(135deg,#667eea,#764ba2); padding: 16px; color: #fff; }
-    .detail-header-inner { max-width: 540px; margin: 0 auto; }
-    .back-btn { background: none; border: none; color: #fff; font-size: 15px; font-weight: 600; padding: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; opacity: 0.9; }
-    .detail-emoji { font-size: 36px; margin-bottom: 4px; }
-    .detail-title { font-size: 22px; font-weight: 800; }
-    .detail-meta { font-size: 12px; opacity: 0.8; margin-top: 3px; }
-    .detail-actions { display: flex; gap: 8px; margin-top: 12px; }
-    .detail-action-btn { padding: 7px 14px; border-radius: 20px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 12px; font-weight: 600; }
+/* STORE TABS */
+.stores-scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 6px;scrollbar-width:none;}
+.stores-scroll::-webkit-scrollbar{display:none;}
+.store-tab{white-space:nowrap;padding:7px 16px;border-radius:20px;border:none;font-size:13px;font-weight:600;background:#e8e8e8;color:#777;transition:all 0.15s;flex-shrink:0;}
+.store-tab.active{background:#1a1a2e;color:#fff;}
+.add-store-tab{white-space:nowrap;padding:7px 14px;border-radius:20px;border:2px dashed #ccc;background:none;color:#aaa;font-size:13px;font-weight:600;flex-shrink:0;}
 
-    /* Items */
-    .items-wrap { max-width: 540px; margin: 0 auto; padding: 12px 16px 100px; }
-    .add-item-bar { display: flex; gap: 10px; margin-bottom: 16px; }
-    .add-item-input { flex: 1; padding: 12px 16px; border-radius: 14px; border: 2px solid #e8e8e8; font-size: 15px; background: #fff; transition: border-color 0.2s; }
-    .add-item-input:focus { outline: none; border-color: #667eea; }
-    .add-item-btn { padding: 12px 18px; border-radius: 14px; border: none; background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; font-size: 20px; font-weight: 700; }
+/* STORE BODY */
+.store-body{padding:10px 16px 100px;}
+.store-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.store-title{font-size:18px;font-weight:800;color:#1a1a2e;}
+.store-header-btns{display:flex;gap:8px;}
+.sm-btn{padding:6px 12px;border-radius:12px;border:none;font-size:12px;font-weight:600;background:rgba(0,0,0,0.07);color:#555;}
+.danger-sm{background:#ffe8e8;color:#e05555;}
 
-    .item-row { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: #fff; border-radius: 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
-    .item-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d0d0d0; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.15s; }
-    .item-check.done { background: #667eea; border-color: #667eea; }
-    .item-text { flex: 1; font-size: 15px; color: #1a1a2e; word-break: break-word; }
-    .item-text.done { text-decoration: line-through; color: #bbb; }
-    .item-del { background: none; border: none; color: #ddd; font-size: 18px; padding: 4px; }
-    .item-del:hover { color: #ff6b6b; }
+/* CATEGORY */
+.cat-block{background:#fff;border-radius:18px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f0f0f0;}
+.cat-name{font-size:14px;font-weight:700;color:#1a1a2e;}
+.cat-btns{display:flex;gap:6px;}
+.cat-add-btn{padding:5px 12px;border-radius:10px;border:none;background:#1a1a2e;color:#fff;font-size:12px;font-weight:700;}
+.cat-del-btn{padding:5px 8px;border-radius:10px;border:none;background:#f0f0f0;color:#aaa;font-size:12px;}
+.cat-empty{padding:16px;text-align:center;color:#ccc;font-size:13px;}
 
-    .empty-state { text-align: center; padding: 48px 16px; color: #bbb; }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-text { font-size: 15px; }
+/* ITEM ROW */
+.item-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f8f8f8;}
+.item-img{width:52px;height:52px;border-radius:10px;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
+.item-img img{width:100%;height:100%;object-fit:cover;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:14px;font-weight:600;color:#1a1a2e;}
+.item-name.done{text-decoration:line-through;color:#bbb;}
+.item-price{font-size:13px;color:#e05555;font-weight:700;margin-top:1px;}
+.item-twd{font-size:11px;color:#aaa;}
+.item-note{font-size:11px;color:#bbb;margin-top:2px;}
+.item-check{width:22px;height:22px;border-radius:50%;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.15s;}
+.item-check.done{background:#1a1a2e;border-color:#1a1a2e;}
+.item-row-btns{display:flex;gap:4px;}
+.item-edit-btn,.item-del-btn{padding:5px 8px;border-radius:8px;border:none;font-size:13px;}
+.item-edit-btn{background:#f0f0f0;color:#555;}
+.item-del-btn{background:#fff0f0;color:#e05555;}
 
-    /* Modal */
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: flex-end; justify-content: center; z-index: 999; }
-    .modal { background: #fff; border-radius: 24px 24px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 540px; }
-    .modal-title { font-size: 17px; font-weight: 800; color: #1a1a2e; margin-bottom: 18px; }
-    .modal label { font-size: 12px; font-weight: 700; color: #aaa; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .modal input, .modal textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #e8e8e8; font-size: 15px; margin-bottom: 14px; }
-    .modal input:focus, .modal textarea:focus { outline: none; border-color: #667eea; }
-    .emoji-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .emoji-opt { width: 42px; height: 42px; border-radius: 10px; border: 2px solid #e8e8e8; background: #fafafa; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .emoji-opt.sel { border-color: #667eea; background: #667eea12; }
-    .color-grid { display: flex; gap: 8px; margin-bottom: 16px; }
-    .color-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
-    .color-opt.sel { border-color: #333; }
-    .modal-btns { display: flex; gap: 10px; }
-    .modal-save { flex: 1; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg,#667eea,#764ba2); color: #fff; font-size: 15px; font-weight: 700; }
-    .modal-cancel { flex: 1; padding: 14px; border-radius: 14px; border: 2px solid #e8e8e8; background: #fff; color: #aaa; font-size: 15px; font-weight: 600; }
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;z-index:999;}
+.modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;}
+.modal-title{font-size:17px;font-weight:800;color:#1a1a2e;margin-bottom:18px;}
+.field-label{font-size:11px;font-weight:700;color:#aaa;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.field-input{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e8e8e8;font-size:14px;margin-bottom:13px;transition:border-color 0.2s;}
+.field-input:focus{outline:none;border-color:#1a1a2e;}
+.field-select{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e8e8e8;font-size:14px;margin-bottom:13px;background:#fff;}
+.img-upload-row{display:flex;gap:12px;align-items:center;margin-bottom:13px;}
+.img-preview{width:72px;height:72px;border-radius:12px;border:2px dashed #e0e0e0;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;cursor:pointer;flex-shrink:0;}
+.img-preview img{width:100%;height:100%;object-fit:cover;}
+.img-upload-btn{padding:9px 18px;border-radius:12px;border:none;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;}
+.img-remove-btn{padding:7px 12px;border-radius:12px;border:none;background:#fff0f0;color:#e05555;font-size:12px;margin-top:6px;}
+.price-row{display:flex;gap:10px;align-items:flex-start;}
+.price-row .field-input{margin-bottom:0;}
+.price-twd-preview{font-size:12px;color:#e05555;margin-bottom:13px;margin-top:4px;font-weight:600;}
+.modal-btns{display:flex;gap:10px;margin-top:6px;}
+.modal-save{flex:1;padding:13px;border-radius:14px;border:none;background:#1a1a2e;color:#fff;font-size:15px;font-weight:700;}
+.modal-cancel{flex:1;padding:13px;border-radius:14px;border:2px solid #e8e8e8;background:#fff;color:#aaa;font-size:15px;font-weight:600;}
 
-    /* Share */
-    .share-link-box { background: #f7f8fc; border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #555; word-break: break-all; margin-bottom: 14px; }
-    .copy-btn { width: 100%; padding: 13px; border-radius: 14px; border: none; background: #667eea; color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+/* EMOJI PICKER */
+.emoji-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.emoji-opt{width:40px;height:40px;border-radius:10px;border:2px solid #e8e8e8;background:#fafafa;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.emoji-opt.sel{border-color:#1a1a2e;background:#f0f0f0;}
 
-    /* User menu */
-    .user-menu { position: fixed; top: 60px; right: 16px; background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 8px; z-index: 200; min-width: 180px; }
-    .user-menu-item { padding: 11px 14px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; color: #333; }
-    .user-menu-item:hover { background: #f5f5f5; }
-    .user-menu-item.danger { color: #ff6b6b; }
+/* THEME PICKER */
+.theme-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.theme-dot{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform 0.15s;}
+.theme-dot.sel{border-color:#1a1a2e;transform:scale(1.15);}
 
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: #fff; padding: 12px 22px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 9999; animation: fadeup 0.3s ease; }
-    @keyframes fadeup { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
-  </style>
+/* SHARE */
+.share-box{background:#f8f8f8;border-radius:12px;padding:12px 14px;font-size:13px;color:#555;word-break:break-all;margin-bottom:14px;}
+.copy-btn{width:100%;padding:13px;border-radius:14px;border:none;background:#1a1a2e;color:#fff;font-size:15px;font-weight:700;margin-bottom:10px;}
+
+/* USER MENU */
+.user-menu{position:fixed;top:58px;right:12px;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);padding:8px;z-index:200;min-width:180px;}
+.user-menu-item{padding:11px 14px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:#333;}
+.user-menu-item:hover{background:#f5f5f5;}
+.user-menu-item.danger{color:#e05555;}
+.user-menu-email{padding:8px 14px;font-size:12px;color:#aaa;border-bottom:1px solid #f0f0f0;margin-bottom:4px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:11px 22px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;}
+
+/* TOTAL BAR */
+.total-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #f0f0f0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:50;max-width:540px;margin:0 auto;}
+.total-label{font-size:12px;color:#aaa;font-weight:600;}
+.total-amount{font-size:16px;font-weight:800;color:#1a1a2e;}
+.total-twd{font-size:12px;color:#e05555;}
+</style>
 </head>
 <body>
 <div id="root"></div>
+<input type="file" id="img-file-input" accept="image/*" style="display:none"/>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, onSnapshot, arrayUnion, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, onSnapshot, arrayUnion, query, where, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCjjVsi8MZoeiTLMN-6Ju8_SSUbh97aaTM",
-  authDomain: "my-lists-app-1acff.firebaseapp.com",
-  projectId: "my-lists-app-1acff",
-  storageBucket: "my-lists-app-1acff.firebasestorage.app",
-  messagingSenderId: "36330666849",
-  appId: "1:36330666849:web:5cc74e9d21c196dd592320"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const FB = { apiKey:"AIzaSyCjjVsi8MZoeiTLMN-6Ju8_SSUbh97aaTM", authDomain:"my-lists-app-1acff.firebaseapp.com", projectId:"my-lists-app-1acff", storageBucket:"my-lists-app-1acff.firebasestorage.app", messagingSenderId:"36330666849", appId:"1:36330666849:web:5cc74e9d21c196dd592320" };
+const fbApp = initializeApp(FB);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
 
 // ── State ──
 let user = null;
 let lists = [];
-let currentList = null;
-let items = [];
+let currentList = null; // list doc
+let activeStoreIdx = 0;
+let modal = null;
+let modalData = {};
+let menuOpen = false;
+let themeModal = false;
+let toast = null, toastT = null;
 let unsubLists = null;
-let unsubItems = null;
-let modal = null; // 'new-list' | 'share' | 'user-menu'
-let newListForm = { name: "", emoji: "✅", color: "#667eea" };
-let addItemText = "";
-let toast = null;
-let toastTimer = null;
-let sharedListId = null; // from URL
+let imgUploadCb = null;
+let rates = { KRW:1, JPY:0, USD:0, EUR:0, CNY:0 };
+let ratesLoaded = false;
 
-const EMOJIS = ["✅","🛒","🇰🇷","🇯🇵","🇹🇼","🛍️","🏕️","🎄","🎓","🏠","🐶","🍰","💄","💊","🌏","🏖️","🎁","📦","🍜","☕","🚗","✈️","🏋️","📚"];
-const COLORS = ["#667eea","#f093fb","#f5576c","#43e97b","#fa8231","#4fc3f7","#a29bfe","#fd79a8","#00b894","#fdcb6e"];
+const THEMES = ["#FCFDFD","#E7D5E3","#A0B1DE","#FDD3D9","#F2EDE9","#DECBBB","#DFEDF3","#DFE1E7","#DAF0FE","#FFDCE3"];
+const EMOJIS = ["🛒","🇰🇷","🇯🇵","🇹🇼","🇺🇸","🇪🇺","🛍️","💄","💊","🏕️","🎄","🎓","🏠","🐶","🍰","☕","✈️","🏖️","🎁","📦","🏋️","📚","🌏","🎁"];
+const CURRENCIES = [{v:"KRW",l:"韓元 ₩"},{v:"JPY",l:"日圓 ¥"},{v:"USD",l:"美元 $"},{v:"EUR",l:"歐元 €"},{v:"CNY",l:"人民幣 ¥"}];
+const CSYM = {KRW:"₩",JPY:"¥",USD:"$",EUR:"€",CNY:"¥"};
 
-function render() {
-  const root = document.getElementById("root");
-  if (!user) { root.innerHTML = renderLogin(); attachLogin(); return; }
-  if (currentList) { root.innerHTML = renderDetail(); attachDetail(); return; }
-  root.innerHTML = renderHome();
-  attachHome();
+const userTheme = () => localStorage.getItem("theme") || "#F2EDE9";
+const setTheme = c => { localStorage.setItem("theme",c); document.body.style.background=c; };
+
+async function fetchRates() {
+  try {
+    const r = await fetch("https://open.er-api.com/v6/latest/TWD");
+    const d = await r.json();
+    if(d.rates){ rates.KRW=d.rates.KRW||32; rates.JPY=d.rates.JPY||4.7; rates.USD=1/d.rates.USD||32; rates.EUR=1/d.rates.EUR||35; rates.CNY=1/d.rates.CNY||4.5; ratesLoaded=true; }
+  } catch{}
+}
+function toTWD(amount, currency){
+  if(!amount) return "";
+  const n = Number(amount);
+  if(!n) return "";
+  let twd=0;
+  if(currency==="KRW") twd=n/rates.KRW;
+  else if(currency==="JPY") twd=n/rates.JPY;
+  else if(currency==="USD") twd=n*rates.USD;
+  else if(currency==="EUR") twd=n*rates.EUR;
+  else if(currency==="CNY") twd=n*rates.CNY;
+  return twd ? `≈ NT$${Math.round(twd).toLocaleString()}` : "";
 }
 
-// ── LOGIN ──
-function renderLogin() {
+// ── RENDER ──
+function render(){
+  document.body.style.background = userTheme();
+  const root = document.getElementById("root");
+  if(!user){ root.innerHTML = renderLogin(); bindLogin(); return; }
+  if(!currentList){ root.innerHTML = renderHome(); bindHome(); return; }
+  root.innerHTML = renderDetail(); bindDetail();
+}
+
+// LOGIN
+function renderLogin(){
   return `<div class="login-wrap">
     <div class="login-card">
-      <div class="login-icon">📋</div>
+      <div class="login-logo">✨</div>
       <div class="login-title">My Lists</div>
       <div class="login-sub">旅行、採買、任何事<br>一個地方管理所有清單</div>
-      <button class="google-btn" id="google-login">
-        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <button class="google-btn" id="g-login">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         使用 Google 登入
       </button>
     </div>
   </div>`;
 }
-function attachLogin() {
-  document.getElementById("google-login").onclick = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch(e) { showToast("登入失敗，請再試一次"); }
-  };
-}
+function bindLogin(){ document.getElementById("g-login").onclick = ()=> signInWithPopup(auth, new GoogleAuthProvider()).catch(()=>showToast("登入失敗")); }
 
-// ── HOME ──
-function renderHome() {
-  const name = (user.displayName || "").split(" ")[0];
-  const myLists = lists.filter(l => l.ownerId === user.uid);
-  const sharedLists = lists.filter(l => l.ownerId !== user.uid);
-
+// HOME
+function renderHome(){
+  const name = (user.displayName||"").split(" ")[0];
+  const myLists = lists.filter(l=>l.ownerId===user.uid);
+  const sharedLists = lists.filter(l=>l.ownerId!==user.uid);
+  const avatarEl = user.photoURL ? `<img class="avatar" src="${user.photoURL}" id="av-btn">` : `<div class="avatar-ph" id="av-btn">👤</div>`;
   return `
-  <div class="app">
-    ${renderHeader(name)}
-    <div class="greeting">
-      <h2>Hi, ${name} 👋</h2>
-      <p>你有 ${myLists.length} 份清單</p>
-    </div>
-    <div class="lists-wrap">
-      <div class="section-title">我的清單</div>
-      <div class="lists-grid">
-        ${myLists.map(l => renderListCard(l)).join("")}
-        <div class="new-list-card" id="new-list-btn">
-          <div class="new-list-icon">＋</div>
-          <div class="new-list-label">新增清單</div>
-        </div>
-      </div>
-      ${sharedLists.length > 0 ? `
-        <div class="section-title">共享給我的</div>
-        <div class="lists-grid">
-          ${sharedLists.map(l => renderListCard(l, true)).join("")}
-        </div>
-      ` : ""}
+  <div class="header">
+    <div class="header-title">✨ My Lists</div>
+    <div class="header-right">
+      <button class="theme-btn" id="theme-open-btn" title="更換主題">🎨</button>
+      ${avatarEl}
     </div>
   </div>
-  ${modal === "new-list" ? renderNewListModal() : ""}
-  ${modal === "user-menu" ? renderUserMenu() : ""}
-  ${toast ? `<div class="toast">${toast}</div>` : ""}`;
-}
-
-function renderHeader(name) {
-  const img = user.photoURL ? `<img class="avatar" src="${user.photoURL}" id="avatar-btn">` : `<div class="avatar-placeholder" id="avatar-btn">👤</div>`;
-  return `<div class="header"><div class="header-inner"><div class="header-title">📋 My Lists</div>${img}</div></div>`;
-}
-
-function renderListCard(l, shared) {
-  const done = (l.items||[]).filter(i=>i.done).length;
-  const total = (l.items||[]).length;
-  return `<div class="list-card ${shared?'shared':''}" data-id="${l.id}">
-    ${shared ? '<div class="list-shared-badge">共享</div>' : ''}
-    <div class="list-emoji">${l.emoji||"📋"}</div>
-    <div class="list-name">${l.name}</div>
-    <div class="list-count">${total} 項目${total>0?` · ${done} 完成`:''}</div>
-  </div>`;
-}
-
-function renderNewListModal() {
-  return `<div class="modal-bg" id="modal-bg">
-    <div class="modal">
-      <div class="modal-title">✨ 新增清單</div>
-      <label>清單名稱</label>
-      <input id="list-name-input" placeholder="e.g. 🇰🇷 韓國旅行" value="${newListForm.name}" />
-      <label>選擇 Emoji</label>
-      <div class="emoji-grid">
-        ${EMOJIS.map(em => `<div class="emoji-opt ${newListForm.emoji===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}
-      </div>
-      <div class="modal-btns">
-        <button class="modal-cancel" id="modal-cancel">取消</button>
-        <button class="modal-save" id="modal-save">建立</button>
-      </div>
+  <div class="home-wrap">
+    <div class="greeting"><h2>Hi, ${name} 👋</h2><p>你有 ${myLists.length} 份清單</p></div>
+    <div class="section-label">我的清單</div>
+    <div class="lists-grid">
+      ${myLists.map(l=>renderListCard(l)).join("")}
+      <div class="new-card" id="new-list-btn"><div class="new-card-icon">＋</div><div class="new-card-label">新增清單</div></div>
     </div>
+    ${sharedLists.length ? `<div class="section-label">共享給我的</div><div class="lists-grid">${sharedLists.map(l=>renderListCard(l,true)).join("")}</div>` : ""}
+  </div>
+  ${menuOpen ? renderUserMenu() : ""}
+  ${themeModal ? renderThemeModal() : ""}
+  ${modal ? renderModal() : ""}
+  ${toast?`<div class="toast">${toast}</div>`:""}`;
+}
+function renderListCard(l,shared){
+  const stores = l.stores||[];
+  const totalItems = stores.reduce((a,s)=>a+(s.categories||[]).reduce((b,c)=>b+(c.items||[]).length,0),0);
+  return `<div class="list-card" data-lid="${l.id}">
+    ${shared?'<div class="shared-badge">共享</div>':""}
+    <div class="list-card-emoji">${l.emoji||"📋"}</div>
+    <div class="list-card-name">${l.name}</div>
+    <div class="list-card-meta">${stores.length} 店家 · ${totalItems} 商品</div>
   </div>`;
 }
-
-function renderUserMenu() {
-  return `<div class="user-menu" id="user-menu">
-    <div class="user-menu-item">${user.email}</div>
+function renderUserMenu(){
+  return `<div class="user-menu" id="u-menu">
+    <div class="user-menu-email">${user.email}</div>
     <div class="user-menu-item danger" id="logout-btn">登出</div>
   </div>`;
 }
-
-function attachHome() {
-  document.querySelectorAll(".list-card").forEach(el => {
-    el.onclick = () => openList(el.dataset.id);
-  });
-  const nb = document.getElementById("new-list-btn");
-  if (nb) nb.onclick = () => { modal = "new-list"; newListForm = { name:"", emoji:"✅" }; render(); };
-
-  const av = document.getElementById("avatar-btn");
-  if (av) av.onclick = (e) => { e.stopPropagation(); modal = modal === "user-menu" ? null : "user-menu"; render(); };
-
-  if (modal === "new-list") {
-    document.getElementById("modal-bg").onclick = e => { if(e.target.id==="modal-bg"){ modal=null; render(); } };
-    document.getElementById("modal-cancel").onclick = () => { modal=null; render(); };
-    document.getElementById("list-name-input").oninput = e => { newListForm.name = e.target.value; };
-    document.querySelectorAll(".emoji-opt").forEach(el => {
-      el.onclick = () => { newListForm.emoji = el.dataset.emoji; render(); setTimeout(()=>{ const inp=document.getElementById("list-name-input"); if(inp){inp.focus();inp.value=newListForm.name;} },0); };
-    });
-    document.getElementById("modal-save").onclick = createList;
-    setTimeout(() => document.getElementById("list-name-input")?.focus(), 50);
-  }
-  if (modal === "user-menu") {
-    document.onclick = (e) => { if(!document.getElementById("user-menu")?.contains(e.target)){ modal=null; render(); document.onclick=null; } };
-    document.getElementById("logout-btn").onclick = () => { signOut(auth); modal=null; };
-  }
-}
-
-// ── DETAIL ──
-function renderDetail() {
-  const isOwner = currentList.ownerId === user.uid;
-  const doneCount = items.filter(i=>i.done).length;
-  return `
-  <div class="app">
-    <div class="detail-header">
-      <div class="detail-header-inner">
-        <button class="back-btn" id="back-btn">← 返回</button>
-        <div class="detail-emoji">${currentList.emoji||"📋"}</div>
-        <div class="detail-title">${currentList.name}</div>
-        <div class="detail-meta">${items.length} 項目 · ${doneCount} 完成</div>
-        <div class="detail-actions">
-          ${isOwner ? `<button class="detail-action-btn" id="share-btn">🔗 分享</button>` : ""}
-          ${isOwner ? `<button class="detail-action-btn" id="delete-list-btn">🗑 刪除清單</button>` : ""}
-        </div>
-      </div>
-    </div>
-    <div class="items-wrap">
-      <div class="add-item-bar">
-        <input class="add-item-input" id="add-item-input" placeholder="新增項目..." value="${addItemText}" />
-        <button class="add-item-btn" id="add-item-btn">＋</button>
-      </div>
-      ${items.length === 0 ? `<div class="empty-state"><div class="empty-icon">${currentList.emoji||"📋"}</div><div class="empty-text">還沒有項目，新增第一個吧！</div></div>` : ""}
-      ${items.map(item => `
-        <div class="item-row" data-id="${item.id}">
-          <div class="item-check ${item.done?'done':''}" data-check="${item.id}">
-            ${item.done ? '<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : ''}
-          </div>
-          <div class="item-text ${item.done?'done':''}">${item.text}</div>
-          <button class="item-del" data-del="${item.id}">×</button>
-        </div>
-      `).join("")}
-    </div>
-  </div>
-  ${modal === "share" ? renderShareModal() : ""}
-  ${toast ? `<div class="toast">${toast}</div>` : ""}`;
-}
-
-function renderShareModal() {
-  const url = `${location.origin}${location.pathname}?join=${currentList.id}`;
-  return `<div class="modal-bg" id="modal-bg">
+function renderThemeModal(){
+  return `<div class="modal-bg" id="theme-modal-bg">
     <div class="modal">
-      <div class="modal-title">🔗 分享清單</div>
-      <p style="color:#888;font-size:14px;margin-bottom:14px;">把連結傳給朋友，對方登入後就能一起編輯這份清單。</p>
-      <div class="share-link-box">${url}</div>
-      <button class="copy-btn" id="copy-link-btn">複製連結</button>
-      <button class="modal-cancel" id="modal-cancel" style="width:100%">關閉</button>
+      <div class="modal-title">🎨 選擇主題顏色</div>
+      <div class="theme-grid">${THEMES.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c}" data-color="${c}"></div>`).join("")}</div>
+      <div class="modal-btns"><button class="modal-cancel" id="theme-close">關閉</button></div>
     </div>
   </div>`;
 }
+function bindHome(){
+  document.querySelectorAll(".list-card").forEach(el=>el.onclick=()=>openList(el.dataset.lid));
+  document.getElementById("new-list-btn").onclick=()=>{ modal="new-list"; modalData={name:"",emoji:"🛒"}; render(); };
+  const av=document.getElementById("av-btn");
+  if(av) av.onclick=e=>{ e.stopPropagation(); menuOpen=!menuOpen; themeModal=false; render(); };
+  document.getElementById("theme-open-btn").onclick=e=>{ e.stopPropagation(); themeModal=!themeModal; menuOpen=false; render(); };
+  if(menuOpen){
+    document.getElementById("logout-btn").onclick=()=>{ signOut(auth); menuOpen=false; };
+    setTimeout(()=>{ document.onclick=e=>{ if(!document.getElementById("u-menu")?.contains(e.target)){ menuOpen=false; render(); document.onclick=null; } }; },0);
+  }
+  if(themeModal){
+    document.getElementById("theme-modal-bg").onclick=e=>{ if(e.target.id==="theme-modal-bg"){ themeModal=false; render(); } };
+    document.getElementById("theme-close").onclick=()=>{ themeModal=false; render(); };
+    document.querySelectorAll(".theme-dot").forEach(el=>el.onclick=()=>{ setTheme(el.dataset.color); render(); });
+  }
+  if(modal) bindModal();
+}
 
-function attachDetail() {
-  document.getElementById("back-btn").onclick = () => {
-    currentList = null; items = [];
-    if (unsubItems) { unsubItems(); unsubItems = null; }
-    modal = null; render();
+// DETAIL
+function renderDetail(){
+  const l = currentList;
+  const stores = l.stores||[];
+  const store = stores[activeStoreIdx]||stores[0];
+  const isOwner = l.ownerId===user.uid;
+  const totalKRW = stores.reduce((a,s)=>(s.categories||[]).reduce((b,c)=>(c.items||[]).reduce((x,i)=>x+(i.currency==="KRW"?Number(i.price)||0:0),b),a),0);
+
+  return `
+  <div class="header">
+    <button class="back-btn" id="back-btn">← 返回</button>
+    <div class="header-right">
+      <button class="theme-btn" id="theme-open-btn">🎨</button>
+      ${user.photoURL?`<img class="avatar" src="${user.photoURL}" id="av-btn">`:`<div class="avatar-ph" id="av-btn">👤</div>`}
+    </div>
+  </div>
+  <div class="detail-wrap">
+    <div class="detail-top">
+      <div class="detail-emoji">${l.emoji||"📋"}</div>
+      <div class="detail-name">${l.name}</div>
+      <div class="detail-meta">${stores.length} 店家</div>
+      <div class="detail-actions">
+        ${isOwner?`<button class="detail-action-btn" id="share-btn">🔗 分享</button>`:""}
+        ${isOwner?`<button class="detail-action-btn danger-sm" id="del-list-btn">🗑 刪除清單</button>`:""}
+      </div>
+    </div>
+
+    <!-- Store tabs -->
+    <div class="stores-scroll">
+      ${stores.map((s,i)=>`<button class="store-tab ${i===activeStoreIdx?'active':''}" data-si="${i}">${s.emoji||""} ${s.name}</button>`).join("")}
+      <button class="add-store-tab" id="add-store-btn">＋ 店家</button>
+    </div>
+
+    <!-- Store body -->
+    ${store ? `
+    <div class="store-body">
+      <div class="store-header">
+        <div class="store-title">${store.emoji||""} ${store.name}</div>
+        <div class="store-header-btns">
+          <button class="sm-btn" id="add-cat-btn">＋ 分類</button>
+          <button class="sm-btn danger-sm" id="del-store-btn">🗑</button>
+        </div>
+      </div>
+      ${(store.categories||[]).map((cat,ci)=>`
+        <div class="cat-block">
+          <div class="cat-header">
+            <div class="cat-name">${cat.name}</div>
+            <div class="cat-btns">
+              <button class="cat-add-btn" data-ci="${ci}">＋ 商品</button>
+              <button class="cat-del-btn" data-delci="${ci}">🗑</button>
+            </div>
+          </div>
+          ${!(cat.items&&cat.items.length)?`<div class="cat-empty">點「＋ 商品」新增</div>`:
+            cat.items.map((item,ii)=>`
+            <div class="item-row">
+              <div class="item-check ${item.done?'done':''}" data-ci="${ci}" data-ii="${ii}">
+                ${item.done?`<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:""}
+              </div>
+              <div class="item-img">${item.image?`<img src="${item.image}">`:"🛒"}</div>
+              <div class="item-info">
+                <div class="item-name ${item.done?'done':''}">${item.name}</div>
+                ${item.price?`<div class="item-price">${CSYM[item.currency]||""}${Number(item.price).toLocaleString()}</div><div class="item-twd">${toTWD(item.price,item.currency)}</div>`:""}
+                ${item.note?`<div class="item-note">📝 ${item.note}</div>`:""}
+              </div>
+              <div class="item-row-btns">
+                <button class="item-edit-btn" data-ci="${ci}" data-ii="${ii}" data-edit="1">✏️</button>
+                <button class="item-del-btn" data-ci="${ci}" data-deli="${ii}">🗑</button>
+              </div>
+            </div>`).join("")
+          }
+        </div>`).join("")}
+    </div>
+    ` : `<div style="padding:30px;text-align:center;color:#bbb">點「＋ 店家」新增第一間店</div>`}
+  </div>
+
+  ${totalKRW?`<div class="total-bar"><div><div class="total-label">預估總花費（韓元）</div><div class="total-twd">${toTWD(totalKRW,"KRW")}</div></div><div class="total-amount">₩${totalKRW.toLocaleString()}</div></div>`:""}
+
+  ${themeModal?renderThemeModal():""}
+  ${modal?renderModal():""}
+  ${toast?`<div class="toast">${toast}</div>`:""}`;
+}
+
+function bindDetail(){
+  document.getElementById("back-btn").onclick=()=>{ currentList=null; activeStoreIdx=0; modal=null; render(); };
+  document.getElementById("theme-open-btn").onclick=e=>{ e.stopPropagation(); themeModal=!themeModal; render(); };
+  const av=document.getElementById("av-btn");
+  if(av) av.onclick=e=>{ e.stopPropagation(); menuOpen=!menuOpen; render(); };
+
+  document.querySelectorAll(".store-tab").forEach(el=>el.onclick=()=>{ activeStoreIdx=parseInt(el.dataset.si); modal=null; render(); });
+  document.getElementById("add-store-btn").onclick=()=>{ modal="add-store"; modalData={name:"",emoji:"🛒"}; render(); };
+
+  const stores=currentList.stores||[];
+  const store=stores[activeStoreIdx];
+  if(store){
+    document.getElementById("add-cat-btn").onclick=()=>{ modal="add-cat"; modalData={name:""}; render(); };
+    document.getElementById("del-store-btn").onclick=()=>{ if(confirm(`刪除「${store.name}」？`)) delStore(); };
+    document.querySelectorAll("[data-ci]").forEach(el=>{
+      if(el.dataset.edit){
+        el.onclick=()=>{ const ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii); const item=(store.categories[ci].items||[])[ii]; modal="edit-item"; modalData={ci,ii,...item}; render(); };
+      } else if(el.dataset.deli!==undefined){
+        // del item
+      } else {
+        el.onclick=()=>{ const ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii); toggleItem(ci,ii); };
+      }
+    });
+    document.querySelectorAll("[data-ci].cat-add-btn").forEach(el=>el.onclick=()=>{ modal="add-item"; modalData={ci:parseInt(el.dataset.ci),name:"",currency:"KRW",price:"",note:"",image:""}; render(); });
+    document.querySelectorAll(".cat-add-btn").forEach(el=>el.onclick=()=>{ modal="add-item"; modalData={ci:parseInt(el.dataset.ci),name:"",currency:"KRW",price:"",note:"",image:""}; render(); });
+    document.querySelectorAll("[data-delci]").forEach(el=>el.onclick=()=>{ if(confirm("刪除此分類？")) delCat(parseInt(el.dataset.delci)); });
+    document.querySelectorAll("[data-deli]").forEach(el=>el.onclick=()=>delItem(parseInt(el.dataset.ci),parseInt(el.dataset.deli)));
+    document.querySelectorAll("[data-edit]").forEach(el=>el.onclick=()=>{
+      const ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii);
+      const item=(store.categories[ci].items||[])[ii];
+      modal="edit-item"; modalData={ci,ii,...item}; render();
+    });
+  }
+  const sb=document.getElementById("share-btn");
+  if(sb) sb.onclick=()=>{ modal="share"; render(); };
+  const dlb=document.getElementById("del-list-btn");
+  if(dlb) dlb.onclick=delList;
+  if(themeModal){
+    document.getElementById("theme-modal-bg").onclick=e=>{ if(e.target.id==="theme-modal-bg"){ themeModal=false; render(); } };
+    document.getElementById("theme-close").onclick=()=>{ themeModal=false; render(); };
+    document.querySelectorAll(".theme-dot").forEach(el=>el.onclick=()=>{ setTheme(el.dataset.color); render(); });
+  }
+  if(modal) bindModal();
+}
+
+// MODAL RENDER
+function renderModal(){
+  if(modal==="new-list") return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">✨ 新增清單</div>
+      <label class="field-label">清單名稱</label>
+      <input class="field-input" id="m-name" placeholder="e.g. 韓國旅行" value="${modalData.name||""}"/>
+      <label class="field-label">Emoji</label>
+      <div class="emoji-grid">${EMOJIS.map(em=>`<div class="emoji-opt ${(modalData.emoji||"🛒")===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}</div>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">建立</button></div>
+    </div></div>`;
+
+  if(modal==="add-store") return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">🏪 新增店家</div>
+      <label class="field-label">店名</label>
+      <input class="field-input" id="m-name" placeholder="e.g. Olive Young" value="${modalData.name||""}"/>
+      <label class="field-label">Emoji</label>
+      <div class="emoji-grid">${EMOJIS.map(em=>`<div class="emoji-opt ${(modalData.emoji||"🛒")===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}</div>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">新增</button></div>
+    </div></div>`;
+
+  if(modal==="add-cat") return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">📂 新增分類</div>
+      <label class="field-label">分類名稱</label>
+      <input class="field-input" id="m-name" placeholder="e.g. 化妝品類💄" value="${modalData.name||""}"/>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">新增</button></div>
+    </div></div>`;
+
+  if(modal==="add-item"||modal==="edit-item"){
+    const md=modalData;
+    const twdStr=toTWD(md.price,md.currency||"KRW");
+    return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">${modal==="edit-item"?"✏️ 編輯商品":"＋ 新增商品"}</div>
+      <label class="field-label">商品名稱</label>
+      <input class="field-input" id="m-item-name" placeholder="e.g. 防曬乳 SPF50" value="${md.name||""}"/>
+      <label class="field-label">商品圖片</label>
+      <div class="img-upload-row">
+        <div class="img-preview" id="img-preview-box">${md.image?`<img src="${md.image}">`:"📷"}</div>
+        <div>
+          <button class="img-upload-btn" id="img-upload-btn">從相簿選擇</button>
+          ${md.image?`<br><button class="img-remove-btn" id="img-remove-btn">移除圖片</button>`:""}
+        </div>
+      </div>
+      <label class="field-label">幣種</label>
+      <select class="field-select" id="m-currency">
+        ${CURRENCIES.map(c=>`<option value="${c.v}" ${(md.currency||"KRW")===c.v?"selected":""}>${c.l}</option>`).join("")}
+      </select>
+      <label class="field-label">價格</label>
+      <input class="field-input" id="m-price" type="number" placeholder="e.g. 15000" value="${md.price||""}"/>
+      ${twdStr?`<div class="price-twd-preview">${twdStr}</div>`:""}
+      <label class="field-label">備註</label>
+      <input class="field-input" id="m-note" placeholder="e.g. 買兩個、限定色" value="${md.note||""}"/>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">儲存</button></div>
+    </div></div>`;
+  }
+
+  if(modal==="share"){
+    const url=`${location.origin}${location.pathname}?join=${currentList.id}`;
+    return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title">🔗 分享清單</div>
+      <p style="color:#888;font-size:14px;margin-bottom:14px;">把連結傳給朋友，對方登入後就能一起編輯。</p>
+      <div class="share-box">${url}</div>
+      <button class="copy-btn" id="copy-btn">複製連結</button>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">關閉</button></div>
+    </div></div>`;
+  }
+  return "";
+}
+
+function bindModal(){
+  const bg=document.getElementById("modal-bg");
+  if(bg) bg.onclick=e=>{ if(e.target.id==="modal-bg"){ modal=null; render(); } };
+  const mc=document.getElementById("m-cancel");
+  if(mc) mc.onclick=()=>{ modal=null; render(); };
+
+  document.querySelectorAll(".emoji-opt").forEach(el=>el.onclick=()=>{ modalData.emoji=el.dataset.emoji; render(); setTimeout(()=>{ const i=document.getElementById("m-name"); if(i){i.focus();i.value=modalData.name;} },0); });
+
+  const ms=document.getElementById("m-save");
+  if(ms) ms.onclick=()=>{
+    if(modal==="new-list"){ modalData.name=document.getElementById("m-name")?.value?.trim()||""; createList(); }
+    else if(modal==="add-store"){ modalData.name=document.getElementById("m-name")?.value?.trim()||""; addStore(); }
+    else if(modal==="add-cat"){ modalData.name=document.getElementById("m-name")?.value?.trim()||""; addCat(); }
+    else if(modal==="add-item"||modal==="edit-item"){
+      modalData.name=document.getElementById("m-item-name")?.value?.trim()||"";
+      modalData.price=document.getElementById("m-price")?.value||"";
+      modalData.currency=document.getElementById("m-currency")?.value||"KRW";
+      modalData.note=document.getElementById("m-note")?.value||"";
+      modal==="edit-item"?editItem():addItem();
+    }
   };
 
-  const inp = document.getElementById("add-item-input");
-  inp.oninput = e => { addItemText = e.target.value; };
-  inp.onkeydown = e => { if(e.key==="Enter") addItem(); };
-  document.getElementById("add-item-btn").onclick = addItem;
-
-  document.querySelectorAll("[data-check]").forEach(el => {
-    el.onclick = () => toggleItem(el.dataset.check);
-  });
-  document.querySelectorAll("[data-del]").forEach(el => {
-    el.onclick = () => deleteItem(el.dataset.del);
-  });
-
-  const sb = document.getElementById("share-btn");
-  if (sb) sb.onclick = () => { modal = "share"; render(); };
-
-  const db2 = document.getElementById("delete-list-btn");
-  if (db2) db2.onclick = deleteList;
-
-  if (modal === "share") {
-    document.getElementById("modal-bg").onclick = e => { if(e.target.id==="modal-bg"){ modal=null; render(); } };
-    document.getElementById("modal-cancel").onclick = () => { modal=null; render(); };
-    document.getElementById("copy-link-btn").onclick = () => {
-      const url = `${location.origin}${location.pathname}?join=${currentList.id}`;
-      navigator.clipboard.writeText(url).then(() => showToast("✅ 連結已複製！"));
+  // image upload
+  const iub=document.getElementById("img-upload-btn");
+  if(iub){
+    iub.onclick=()=>{
+      const inp=document.getElementById("img-file-input");
+      imgUploadCb=(dataUrl)=>{ modalData.image=dataUrl; render(); };
+      inp.onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=x=>{ imgUploadCb&&imgUploadCb(x.target.result); }; r.readAsDataURL(f); inp.value=""; };
+      inp.click();
     };
   }
+  const irb=document.getElementById("img-remove-btn");
+  if(irb) irb.onclick=()=>{ modalData.image=""; render(); };
+
+  // live twd preview
+  const priceInp=document.getElementById("m-price");
+  const curSel=document.getElementById("m-currency");
+  const updatePreview=()=>{
+    const p=priceInp?.value; const c=curSel?.value||"KRW";
+    const prev=document.querySelector(".price-twd-preview");
+    if(prev) prev.textContent=toTWD(p,c);
+    else if(p&&toTWD(p,c)){ const el=document.createElement("div"); el.className="price-twd-preview"; el.textContent=toTWD(p,c); priceInp.after(el); }
+  };
+  if(priceInp) priceInp.oninput=updatePreview;
+  if(curSel) curSel.onchange=updatePreview;
+
+  const cb=document.getElementById("copy-btn");
+  if(cb) cb.onclick=()=>{ navigator.clipboard.writeText(`${location.origin}${location.pathname}?join=${currentList.id}`).then(()=>showToast("✅ 連結已複製！")); };
+
+  setTimeout(()=>{ const i=document.getElementById("m-name")||document.getElementById("m-item-name"); if(i) i.focus(); },50);
 }
 
-// ── FIRESTORE OPS ──
-async function createList() {
-  const name = document.getElementById("list-name-input")?.value?.trim() || newListForm.name.trim();
-  if (!name) { showToast("請輸入清單名稱"); return; }
-  try {
-    await addDoc(collection(db, "lists"), {
-      name, emoji: newListForm.emoji || "✅",
-      ownerId: user.uid,
-      ownerName: user.displayName || "",
-      members: [user.uid],
-      createdAt: serverTimestamp()
-    });
-    modal = null; newListForm = { name:"", emoji:"✅" };
-    showToast("✨ 清單已建立！");
-    render();
-  } catch(e) { showToast("建立失敗，請再試"); }
+// ── DATA OPS ──
+async function saveList(){ await updateDoc(doc(db,"lists",currentList.id),{ stores: currentList.stores||[], updatedAt:serverTimestamp() }); }
+
+async function createList(){
+  if(!modalData.name){ showToast("請輸入清單名稱"); return; }
+  const ref=await addDoc(collection(db,"lists"),{ name:modalData.name, emoji:modalData.emoji||"🛒", ownerId:user.uid, ownerName:user.displayName||"", members:[user.uid], stores:[], createdAt:serverTimestamp() });
+  modal=null; showToast("✨ 清單已建立！"); render();
 }
 
-async function openList(id) {
-  const snap = await getDoc(doc(db, "lists", id));
-  if (!snap.exists()) { showToast("找不到這份清單"); return; }
-  currentList = { id: snap.id, ...snap.data() };
-  items = [];
-  modal = null;
-  render();
-  // subscribe items
-  if (unsubItems) unsubItems();
-  unsubItems = onSnapshot(
-    query(collection(db, "lists", id, "items")),
-    snap => {
-      items = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
-      render();
-    }
-  );
+async function openList(id){
+  const snap=await getDoc(doc(db,"lists",id));
+  if(!snap.exists()){ showToast("找不到清單"); return; }
+  currentList={ id:snap.id, ...snap.data() };
+  currentList.stores=currentList.stores||[];
+  activeStoreIdx=0; modal=null; render();
+  // realtime sync
+  onSnapshot(doc(db,"lists",id), s=>{ if(s.exists()){ currentList={id:s.id,...s.data()}; currentList.stores=currentList.stores||[]; render(); } });
 }
 
-async function addItem() {
-  const text = (document.getElementById("add-item-input")?.value || addItemText).trim();
-  if (!text) return;
-  addItemText = "";
-  try {
-    await addDoc(collection(db, "lists", currentList.id, "items"), {
-      text, done: false, createdAt: serverTimestamp(), addedBy: user.uid
-    });
-  } catch(e) { showToast("新增失敗"); }
+function addStore(){
+  if(!modalData.name){ showToast("請輸入店名"); return; }
+  currentList.stores=currentList.stores||[];
+  currentList.stores.push({ name:modalData.name, emoji:modalData.emoji||"🛒", categories:[] });
+  activeStoreIdx=currentList.stores.length-1;
+  modal=null; saveList(); render();
+}
+function delStore(){
+  const stores=currentList.stores||[];
+  stores.splice(activeStoreIdx,1);
+  currentList.stores=stores;
+  activeStoreIdx=Math.max(0,activeStoreIdx-1);
+  saveList(); render();
+}
+function addCat(){
+  if(!modalData.name){ showToast("請輸入分類名稱"); return; }
+  const store=currentList.stores[activeStoreIdx];
+  store.categories=store.categories||[];
+  store.categories.push({ name:modalData.name, items:[] });
+  modal=null; saveList(); render();
+}
+function delCat(ci){
+  const store=currentList.stores[activeStoreIdx];
+  store.categories.splice(ci,1);
+  saveList(); render();
+}
+function addItem(){
+  if(!modalData.name){ showToast("請輸入商品名稱"); return; }
+  const store=currentList.stores[activeStoreIdx];
+  const cat=store.categories[modalData.ci];
+  cat.items=cat.items||[];
+  cat.items.push({ name:modalData.name, image:modalData.image||"", price:modalData.price||"", currency:modalData.currency||"KRW", note:modalData.note||"", done:false });
+  modal=null; saveList(); render();
+}
+function editItem(){
+  if(!modalData.name){ showToast("請輸入商品名稱"); return; }
+  const store=currentList.stores[activeStoreIdx];
+  const cat=store.categories[modalData.ci];
+  cat.items[modalData.ii]={ name:modalData.name, image:modalData.image||"", price:modalData.price||"", currency:modalData.currency||"KRW", note:modalData.note||"", done:cat.items[modalData.ii].done||false };
+  modal=null; saveList(); render();
+}
+function delItem(ci,ii){
+  const store=currentList.stores[activeStoreIdx];
+  store.categories[ci].items.splice(ii,1);
+  saveList(); render();
+}
+function toggleItem(ci,ii){
+  const store=currentList.stores[activeStoreIdx];
+  const item=store.categories[ci].items[ii];
+  item.done=!item.done;
+  saveList(); render();
+}
+async function delList(){
+  if(!confirm(`刪除「${currentList.name}」？`)) return;
+  await deleteDoc(doc(db,"lists",currentList.id));
+  currentList=null; modal=null; showToast("清單已刪除"); render();
 }
 
-async function toggleItem(itemId) {
-  const item = items.find(i => i.id === itemId);
-  if (!item) return;
-  await updateDoc(doc(db, "lists", currentList.id, "items", itemId), { done: !item.done });
+// SHARE JOIN
+async function handleJoin(id){
+  try{ await updateDoc(doc(db,"lists",id),{ members:arrayUnion(user.uid) }); showToast("✅ 已加入共享清單！"); history.replaceState({},"",location.pathname); openList(id); }
+  catch(e){ showToast("無法加入，連結可能已失效"); }
 }
 
-async function deleteItem(itemId) {
-  await deleteDoc(doc(db, "lists", currentList.id, "items", itemId));
+function subLists(){
+  if(unsubLists) unsubLists();
+  unsubLists=onSnapshot(query(collection(db,"lists"),where("members","array-contains",user.uid)), snap=>{ lists=snap.docs.map(d=>({id:d.id,...d.data()})); render(); });
 }
 
-async function deleteList() {
-  if (!confirm(`刪除「${currentList.name}」？此動作無法復原。`)) return;
-  // delete all items
-  const itemsSnap = await getDocs(collection(db, "lists", currentList.id, "items"));
-  await Promise.all(itemsSnap.docs.map(d => deleteDoc(d.ref)));
-  await deleteDoc(doc(db, "lists", currentList.id));
-  currentList = null; items = [];
-  if (unsubItems) { unsubItems(); unsubItems = null; }
-  showToast("清單已刪除");
-  render();
-}
+function showToast(msg){ toast=msg; if(toastT) clearTimeout(toastT); render(); toastT=setTimeout(()=>{ toast=null; render(); },2500); }
 
-// ── JOIN via share link ──
-async function handleJoinLink(listId) {
-  try {
-    const ref = doc(db, "lists", listId);
-    await updateDoc(ref, { members: arrayUnion(user.uid) });
-    showToast("✅ 已加入共享清單！");
-    history.replaceState({}, "", location.pathname);
-    openList(listId);
-  } catch(e) { showToast("無法加入，連結可能已失效"); }
-}
-
-// ── Subscribe user's lists ──
-function subscribeLists() {
-  if (unsubLists) unsubLists();
-  unsubLists = onSnapshot(
-    query(collection(db, "lists"), where("members", "array-contains", user.uid)),
-    snap => {
-      lists = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      render();
-    }
-  );
-}
-
-function showToast(msg) {
-  toast = msg;
-  if (toastTimer) clearTimeout(toastTimer);
-  render();
-  toastTimer = setTimeout(() => { toast = null; render(); }, 2500);
-}
-
-// ── Auth listener ──
-onAuthStateChanged(auth, async u => {
-  user = u;
-  if (u) {
-    subscribeLists();
-    const joinId = new URLSearchParams(location.search).get("join");
-    if (joinId) { sharedListId = joinId; await handleJoinLink(joinId); }
-  } else {
-    if (unsubLists) { unsubLists(); unsubLists = null; }
-    if (unsubItems) { unsubItems(); unsubItems = null; }
-    lists = []; currentList = null; items = [];
-  }
+onAuthStateChanged(auth, async u=>{
+  user=u;
+  if(u){ fetchRates(); subLists(); const j=new URLSearchParams(location.search).get("join"); if(j) await handleJoin(j); }
+  else{ if(unsubLists){ unsubLists(); unsubLists=null; } lists=[]; currentList=null; }
   render();
 });
 </script>
